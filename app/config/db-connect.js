@@ -1,15 +1,17 @@
+const { Client } = require('pg');
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
 
-/*
-var mysql = require('mysql')
+client.connect();
 
-var connection = mysql.createConnection('mysql://bd11f2abb3cc78:352fdca9@eu-cdbr-west-02.cleardb.net/heroku_115d5a1e834aec8?reconnect=true');
-connection.connect();
+client.query('SELECT name FROM public.team;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
 
-connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
-  if (err) throw err
-
-  console.log('The solution is: ', rows[0].solution)
-})
-
-//connection.end()
-*/
+return client;
