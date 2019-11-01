@@ -9,4 +9,4 @@ connection.query('SELECT 1 + 1 AS solution', function (err, rows, fields) {
   console.log('The solution is: ', rows[0].solution)
 })
 
-connection.end()
+//connection.end()
