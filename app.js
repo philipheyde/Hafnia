@@ -1,6 +1,8 @@
 var express  = require('express');
 var app      = express();
+
 var port     = process.env.PORT || 8080;
+
 var mongoose = require('mongoose');
 //var createError = require('http-errors');
 var express = require('express');
@@ -12,9 +14,6 @@ var passport = require('passport');
 var flash    = require('connect-flash');
 var bodyParser   = require('body-parser');
 
-//var indexRouter = require('./app/routes/index');
-//var usersRouter = require('./app/routes/users');
-
 var configDB = require('./config/database');
 
 // configuration ===============================================================
@@ -23,22 +22,18 @@ mongoose.connect(configDB.url); // connect to our database
 require('./config/passport')(passport); // pass passport for configuration
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+//app.set('views', path.join(__dirname, 'views'));
 
 //app.use(morgan('dev')); // log every request to the console
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: false }));
-//app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
-app.use(morgan('dev')); // log every request to the console
 
 app.set('view engine', 'ejs');
-
-//app.use('/', indexRouter);
-//app.use('/users', usersRouter);
 
 // required for passport
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
