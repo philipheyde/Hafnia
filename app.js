@@ -1,29 +1,59 @@
-var createError = require('http-errors');
+var express  = require('express');
+var app      = express();
+var port     = process.env.PORT || 8080;
+var mongoose = require('mongoose');
+//var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-//var session = require('express-session');
+var morgan = require('morgan');
+var session = require('express-session');
+var passport = require('passport');
+var flash    = require('connect-flash');
+var bodyParser   = require('body-parser');
 
-var indexRouter = require('./app/routes/index');
-var usersRouter = require('./app/routes/users');
-var dbConnection = require('./app/config/db-connect');
-console.log('dbConnection: ' + dbConnection);
-var app = express();
+//var indexRouter = require('./app/routes/index');
+//var usersRouter = require('./app/routes/users');
+
+var configDB = require('./config/database');
+
+// configuration ===============================================================
+mongoose.connect(configDB.url); // connect to our database
+
+require('./config/passport')(passport); // pass passport for configuration
 
 // view engine setup
-app.set('views', path.join(__dirname, 'app/views'));
+app.set('views', path.join(__dirname, 'views'));
+
+//app.use(morgan('dev')); // log every request to the console
+//app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
+//app.use(cookieParser());
+//app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser()); // get information from html forms
+app.use(morgan('dev')); // log every request to the console
+
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use('/', indexRouter);
+//app.use('/users', usersRouter);
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// required for passport
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
+// routes ======================================================================
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
+// launch ======================================================================
+app.listen(port);
+console.log('The magic happens on port ' + port);
+
+/*
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -39,5 +69,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
+*/
 module.exports = app;
