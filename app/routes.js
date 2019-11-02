@@ -1,23 +1,12 @@
-/*
-var express = require('express');
-var router = express.Router();
-*/
-/* GET home page. */
-/*
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-module.exports = router;
-*/
-
 module.exports = function(app, passport) {
 
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
   app.get('/', function(req, res) {
-      res.render('index.ejs'); // load the index.ejs file
+      res.render('index.ejs', {
+        user : req.user // get the user out of session and pass to template
+    }); // load the index.ejs file
   });
 
   // =====================================
@@ -31,7 +20,7 @@ module.exports = function(app, passport) {
   });
 
   // process the login form
-  app.post('/login', passport.authenticate('local-login', {
+  app.post('/login', isNotLoggedIn, passport.authenticate('local-login', {
         successRedirect : '/profile', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
@@ -40,7 +29,7 @@ module.exports = function(app, passport) {
   // SIGNUP ==============================
   // =====================================
   // show the signup form
-  app.get('/signup', function(req, res) {
+  app.get('/signup', isNotLoggedIn, function(req, res) {
 
       // render the page and pass in any flash data if it exists
       res.render('signup.ejs', { message: req.flash('signupMessage') });
@@ -80,6 +69,14 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
       return next();
 
-  // if they aren't redirect them to the home page
+  // if they aren't, redirect them to the home page
+  res.redirect('/');
+}
+// route middleware to make sure a user is logged in
+function isNotLoggedIn(req, res, next) {
+
+  if (!req.isAuthenticated())
+    return next();
+  
   res.redirect('/');
 }
