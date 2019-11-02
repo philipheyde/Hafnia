@@ -21,23 +21,24 @@
         </div>
         <% } else { %>
             <div class="row">
-
-                    <!-- LOCAL INFORMATION -->
-                    <div class="col-sm-6">
-                        <div class="well">
-                            <h3><span class="fa fa-user"></span> Local</h3>
-            
-                                <p>
-                                    <strong>id</strong>: <%= user._id %><br>
-                                    <strong>email</strong>: <%= user.email %><br>
-                                    <strong>password</strong>: <%= user.password %>
-                                </p>
-            
-                        </div>
+                <!-- LOCAL INFORMATION -->
+                <div class="col-sm-6">
+                    <div class="well">
+                        <h3><span class="fa fa-user"></span> Local</h3>
+                            <p>
+                                <strong>id</strong>: <%= user._id %><br>
+                                <strong>email</strong>: <%= user.email %><br>
+                                <strong>password</strong>: <%= user.password %>
+                            </p>
                     </div>
-            
                 </div>
-                    <% } %>
+            </div>
+        <% } %>
+        <ul>
+            <% divisions.forEach(function(division){ %>
+                <li><%= division.name %></li>
+            <% }) %>
+        </ul>
 
     </div>
     

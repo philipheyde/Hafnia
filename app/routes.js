@@ -1,12 +1,27 @@
+const divisions = require('./models/division');
+const games     = require('./models/game');
+const teams     = require('./models/team');
+
 module.exports = function(app, passport) {
 
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
   app.get('/', function(req, res) {
+    var query = divisions.find({});
+    query.exec(function (err, divisionData) {
       res.render('index.ejs', {
-        user : req.user // get the user out of session and pass to template
+        user : req.user, // get the user out of session and pass to template
+        divisions : divisionData
+      });
+    });
+
+    /*
+    res.render('index.ejs', {
+      user : req.user, // get the user out of session and pass to template
+      divisions : divisions
     }); // load the index.ejs file
+    */
   });
 
   // =====================================
