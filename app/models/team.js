@@ -1,15 +1,29 @@
 // load the things we need
 var mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
 
 // define the schema for our user model
 var teamSchema = mongoose.Schema({
 
-    name            : String,
-    coach           : {type: Schema.Types.ObjectId, ref: 'User', required: true},
-    divisionId      : {type: Schema.Types.ObjectId, ref: 'Division', required: true},
-    posInDivision   : Number
+    name: {
+        type: String,
+        required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId, 
+        ref: 'User', 
+        required: true
+    },
+    division: {
+        type: Schema.Types.ObjectId,
+        ref: 'Division',
+        required: true
+    },
+    posInDivision: {
+        type: Number,
+        required: true
+    }
 });
 
 // methods ======================

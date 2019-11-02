@@ -1,11 +1,19 @@
 // load the things we need
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 // define the schema for our user model
 var divisionSchema = mongoose.Schema({
 
-    name            : String,
-    positionInList  : Number
+    name: {
+        type        : String,
+        required    : true
+    },
+    positionInList: {
+        type        : Number,
+        required    : true
+    },
+    teams: [{type: Schema.Types.ObjectId, ref: 'Team'}]
 });
 
 // methods ======================

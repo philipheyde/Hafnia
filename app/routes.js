@@ -1,6 +1,7 @@
 const divisions = require('./models/division');
 const games     = require('./models/game');
 const teams     = require('./models/team');
+const user      = require('./models/user');
 
 module.exports = function(app, passport) {
 
@@ -8,12 +9,17 @@ module.exports = function(app, passport) {
   // HOME PAGE (with login links) ========
   // =====================================
   app.get('/', function(req, res) {
-    var query = divisions.find({});
-    query.exec(function (err, divisionData) {
-      res.render('index.ejs', {
-        user : req.user, // get the user out of session and pass to template
-        divisions : divisionData
-      });
+    var query = divisions.find().populate('teams');
+    query.exec(function (err, data) {
+      console.log('divisions', data);
+      /*query = teams.find({}).populate('division');
+        query.exec(function (err, data) {
+          console.log('teams', data);*/
+          res.render('index.ejs', {
+            user : req.user, // get the user out of session and pass to template
+            divisions : data
+          });
+        //});
     });
 
     /*

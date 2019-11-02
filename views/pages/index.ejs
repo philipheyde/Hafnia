@@ -37,6 +37,11 @@
         <ul>
             <% divisions.forEach(function(division){ %>
                 <li><%= division.name %></li>
+                    <ol>
+                        <% division.teams.forEach(function(team){ %>
+                            <li><%= team.name %></li>
+                        <% }) %>
+                    </ol>
             <% }) %>
         </ul>
 
