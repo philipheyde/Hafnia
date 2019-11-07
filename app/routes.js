@@ -2,6 +2,7 @@ const divisions = require('./models/division');
 const games     = require('./models/game');
 const teams     = require('./models/team');
 const user      = require('./models/user');
+const races     = require('./models/race');
 
 module.exports = function(app, passport) {
 
@@ -9,17 +10,18 @@ module.exports = function(app, passport) {
   // HOME PAGE (with login links) ========
   // =====================================
   app.get('/', function(req, res) {
-    var query = divisions.find().populate('teams');
+    var query = divisions.find().populate({path: 'teams', populate: {path: 'race', select: 'name'}});
     query.exec(function (err, data) {
-      console.log('divisions', data);
-      /*query = teams.find({}).populate('division');
-        query.exec(function (err, data) {
-          console.log('teams', data);*/
-          res.render('index.ejs', {
-            user : req.user, // get the user out of session and pass to template
-            divisions : data
-          });
-        //});
+      /*console.log('divisions', data);
+      data.forEach(function (item, index) {
+        item.teams.forEach(function (team, index1) {
+          console.log('team', team);
+        })
+      });*/
+      res.render('index.ejs', {
+        user : req.user, // get the user out of session and pass to template
+        divisions : data
+      });
     });
 
     /*
@@ -69,9 +71,19 @@ module.exports = function(app, passport) {
   // we will want this protected so you have to be logged in to visit
   // we will use route middleware to verify this (the isLoggedIn function)
   app.get('/profile', isLoggedIn, function(req, res) {
+    /*var query = teams.find().populate('division').populate({
+      path: "user",
+      match: {_id: req.user._id}
+    });*/
+    var query = user.findOne({_id: req.user._id}).populate({path: 'teams', populate: {path: 'race', select: 'name'}})
+    query.exec(function (err, data) {
+      console.log("user", data)
+      console.log("team data", data.teams)
       res.render('profile.ejs', {
-          user : req.user // get the user out of session and pass to template
+          user : req.user, // get the user out of session and pass to template
+          teamdata: data.teams
       });
+    });
   });
 
   // =====================================

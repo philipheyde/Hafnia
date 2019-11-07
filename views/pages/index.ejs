@@ -39,7 +39,7 @@
                 <li><%= division.name %></li>
                     <ol>
                         <% division.teams.forEach(function(team){ %>
-                            <li><%= team.name %></li>
+                            <li><%= team.name %> (<%= team.race.name %>)</li>
                         <% }) %>
                     </ol>
             <% }) %>

@@ -8,11 +8,11 @@ var divisionSchema = mongoose.Schema({
     name: {
         type        : String,
         required    : true
-    },
+    },/*
     positionInList: {
         type        : Number,
         required    : true
-    },
+    },*/
     teams: [{type: Schema.Types.ObjectId, ref: 'Team'}]
 });
 

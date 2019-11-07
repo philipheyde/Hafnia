@@ -1,6 +1,7 @@
 // load the things we need
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt-nodejs');
+var Schema = mongoose.Schema;
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
@@ -22,8 +23,11 @@ var userSchema = mongoose.Schema({
     },
     lastname: {
         type: String
-    }
-
+    },
+    teams: [{
+        type: Schema.Types.ObjectId, 
+        ref: 'Team'
+    }]
 });
 
 // methods ======================
@@ -35,6 +39,10 @@ userSchema.methods.generateHash = function(password) {
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
+};
+
+userSchema.methods.name = function() {
+    return firstname + " " + lastname;
 };
 
 // create the model for users and expose it to our app

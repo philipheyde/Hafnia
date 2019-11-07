@@ -6,22 +6,30 @@ var Schema = mongoose.Schema;
 // define the schema for our user model
 var gameSchema = mongoose.Schema({
 
-    team1: {
+    /*season: {
         type: Schema.Types.ObjectId, 
-        ref: 'Team',
+        ref: 'Season',
         required: true
-    },
-    team2Id: {
-        type: Schema.Types.ObjectId, 
-        ref: 'Team',
-        required: true
-    },
-    team1Score: {
+    },*/
+    date: Date,
+    teams: [{
+        type: {type: String, required: true},
+        team: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
+        score: Number,
+        casualties: {
+            bh: {type: Number, default: 0, required: true},
+            si: {type: Number, default: 0, required: true},
+            kills: {type: Number, default: 0, required: true},
+        },
+        winner: Boolean
+    }],
+    winner: String,
+    fans: {
         type: Number,
         required: true,
         default: 0
     },
-    team2Score: {
+    spectators: {
         type: Number,
         required: true,
         default: 0

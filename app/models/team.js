@@ -10,6 +10,11 @@ var teamSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    race: {
+        type: Schema.Types.ObjectId,
+        ref: 'Race',
+        required: true
+    },
     user: {
         type: Schema.Types.ObjectId, 
         ref: 'User', 
@@ -19,11 +24,11 @@ var teamSchema = mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Division',
         required: true
-    },
+    }/*,
     posInDivision: {
         type: Number,
         required: true
-    }
+    }*/
 });
 
 // methods ======================

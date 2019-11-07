@@ -1,0 +1,168 @@
+Here is the sample game document.
+
+{  
+    "_id": ObjectId("99292162dd4b0838a6c4069f"),
+    "id": 9719,
+    "round": {  
+        "number": 1,
+        "name": "Round 1"
+    },
+    "date": "2014-3-22T14:5:00+08:00",
+    "venue": {  
+        "id": 2,
+        "name": "My Oval"
+    },
+    "teams": [
+        {  
+            "type": "home",
+            "club": ObjectId("55292162dd4b0849a6c4059f"),
+            "stats": {  
+                "players": [],
+                "team": { }
+            },
+            "score": {
+                "half": 10,
+                "fulltime": 18
+            },
+            "winner": true
+        },
+        {  
+            "type": "away",
+            "club": ObjectId("66292162dd4b0123a6c9876f"),
+            "stats": {  
+                "players": [],
+                "team": { }
+            },
+            "score": {
+                "half": 12,
+                "fulltime": 16
+            },
+            "winner": false
+        }
+    ],
+    "winner": {
+        "type": "home",
+        "margin": 2
+    },
+    "played": true
+}
+This is where I have got to but have no idea where to go from there as I am fairly new to MongoDB.
+
+db.games.aggregate([
+    { "$match" : {"round.number" : 2, "played": true } },
+    { $unwind : "$teams" } 
+]);
+If I need to make some changes to the Schema to make this work I am open to suggestions.
+
+Appreciate your help.
+
+Edit: Expected Result
+
+As a minimum I was looking to get the following for each club.
+
+{
+    "club":      ObjectId,
+    "club_name": String,
+    "wins":      Number,
+    "losses":    Number,
+    "draws":     Number
+}
+Thanks
+
+json mongodb
+shareimprove this question
+edited Apr 12 '15 at 14:22
+asked Apr 12 '15 at 11:43
+
+RyanB
+3333 bronze badges
+Can you show us the expected result? – chridam Apr 12 '15 at 11:47
+I have added that to the question. Cheers. – RyanB Apr 12 '15 at 12:10
+Thanks for the update, however the sample game document you provided is invalid. – chridam Apr 12 '15 at 12:38
+Sorry about that. It is now valid. – RyanB Apr 12 '15 at 12:49
+add a comment
+1 Answer
+activeoldestvotes
+
+0
+
+The following aggregation pipeline will at least give you the club id, number of losses, wins and draws. Note: to get the aggregated results for a round other than the first one, you can change your $match query to filter documents, returning all documents from the previous rounds like $match: { "round.number": {$lte: 3}}.
+
+db.games.aggregate([
+    {
+        $match: {
+            "round.number": 1,
+            "played": true
+        }
+    },
+    {
+        $unwind: "$teams"
+    },
+    {
+        $project: {
+            teams: 1,
+            win: {
+                $cond: [ { $eq: [ "$teams.winner", true ] }, 1, 0 ]
+            },
+            lose: {
+                $cond: [ { $eq: [ "$teams.winner", false ] }, 1, 0 ]
+            },            
+            draw: {
+                $cond: [ { $eq: [ "$winner.type", "draw" ] }, 1, 0 ]
+            }
+        }
+    },
+    {
+        $group: {
+            _id: "$teams.club",            
+            "wins": { $sum: "$win" },
+            "losses": { $sum: "$lose" },
+            "draws": { $sum: "$draw" },  
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            "club": "$_id",
+            wins: 1,
+            losses: 1,
+            draws: 1
+        }
+    }
+]);
+Output:
+
+/* 1 */
+{
+    "result" : [ 
+        {
+            "wins" : 0,
+            "losses" : 1,
+            "draws" : 0,
+            "club" : ObjectId("66292162dd4b0123a6c9876f")
+        }, 
+        {
+            "wins" : 1,
+            "losses" : 0,
+            "draws" : 0,
+            "club" : ObjectId("55292162dd4b0849a6c4059f")
+        }
+    ],
+    "ok" : 1
+}
+To get the final result with the club name field included, use the above aggregation cursor, iterate over the club collection using the club ID in the query, something like:
+
+db.games.aggregate([pipeline]).forEach(function (doc){
+   var result = doc;
+   var club_name = db.club.findOne({_id: doc.club}).name;
+   result["club_name"] = club_name;
+   console.log(result);
+});
+shareimprove this answer
+edited Apr 12 '15 at 14:31
+answered Apr 12 '15 at 13:58
+
+chridam
+74.4k1616 gold badges127127 silver badges165165 bronze badges
+1
+Fantastic! Thanks for that. Makes perfect sense. With regards to the draw situation. The $winner.type value will equal "draw" if it is a draw. And you are right that the $teams.winner is meant to be a boolean. – RyanB Apr 12 '15 at 14:22
