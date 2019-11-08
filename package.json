@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "heroku local web"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
