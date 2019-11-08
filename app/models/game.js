@@ -23,7 +23,10 @@ var gameSchema = mongoose.Schema({
         },
         winner: Boolean
     }],
-    winner: String,
+    winner: {
+        type: String,
+        margin: Number
+    },
     fans: {
         type: Number,
         required: true,
@@ -33,7 +36,8 @@ var gameSchema = mongoose.Schema({
         type: Number,
         required: true,
         default: 0
-    }      
+    },
+    played: Boolean
 });
 
 // methods ======================

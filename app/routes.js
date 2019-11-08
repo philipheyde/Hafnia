@@ -4,6 +4,8 @@ const teams     = require('./models/team');
 const user      = require('./models/user');
 const races     = require('./models/race');
 
+const queryHelper = require('./helpers/queryhelper');
+
 module.exports = function(app, passport) {
 
   // =====================================
@@ -11,16 +13,23 @@ module.exports = function(app, passport) {
   // =====================================
   app.get('/', function(req, res) {
     var query = divisions.find().populate({path: 'teams', populate: {path: 'race', select: 'name'}});
-    query.exec(function (err, data) {
-      /*console.log('divisions', data);
-      data.forEach(function (item, index) {
-        item.teams.forEach(function (team, index1) {
-          console.log('team', team);
-        })
-      });*/
-      res.render('index.ejs', {
-        user : req.user, // get the user out of session and pass to template
-        divisions : data
+    query.exec(function (err, divisions) {
+      var gameQuery = games.aggregate(queryHelper.allGames());
+      
+      gameQuery.exec(function (err, gameData) {
+        console.log('gameData', gameData);
+        games.aggregate(gameData.forEach(function (doc){
+          teams.findOne({_id: doc.team}).exec(function(err, data){
+            console.log('team name', data.name);
+            doc["teamname"] = data.name;
+          });
+        }));
+        
+        res.render('index.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          divisions : divisions,
+          games: gameData
+        });
       });
     });
 
@@ -71,14 +80,10 @@ module.exports = function(app, passport) {
   // we will want this protected so you have to be logged in to visit
   // we will use route middleware to verify this (the isLoggedIn function)
   app.get('/profile', isLoggedIn, function(req, res) {
-    /*var query = teams.find().populate('division').populate({
-      path: "user",
-      match: {_id: req.user._id}
-    });*/
     var query = user.findOne({_id: req.user._id}).populate({path: 'teams', populate: {path: 'race', select: 'name'}})
     query.exec(function (err, data) {
-      console.log("user", data)
-      console.log("team data", data.teams)
+      //console.log("user", data)
+      //console.log("team data", data.teams)
       res.render('profile.ejs', {
           user : req.user, // get the user out of session and pass to template
           teamdata: data.teams

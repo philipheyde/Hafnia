@@ -24,8 +24,8 @@ require('./config/passport')(passport); // pass passport for configuration
 app.set('views', path.join(__dirname, 'views/pages'));
 
 //app.use(morgan('dev')); // log every request to the console
-//app.use(express.json());
-//app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 //app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(morgan('dev')); // log every request to the console
