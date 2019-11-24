@@ -1,3 +1,4 @@
+/*
 // load the things we need
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -8,11 +9,7 @@ var divisionSchema = mongoose.Schema({
     name: {
         type        : String,
         required    : true
-    },/*
-    positionInList: {
-        type        : Number,
-        required    : true
-    },*/
+    },
     teams: [{type: Schema.Types.ObjectId, ref: 'Team'}]
 });
 
@@ -20,3 +17,4 @@ var divisionSchema = mongoose.Schema({
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Division', divisionSchema);
+*/

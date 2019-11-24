@@ -1,3 +1,4 @@
+/*
 // load the things we need
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -6,11 +7,6 @@ var Schema = mongoose.Schema;
 // define the schema for our user model
 var gameSchema = mongoose.Schema({
 
-    /*season: {
-        type: Schema.Types.ObjectId, 
-        ref: 'Season',
-        required: true
-    },*/
     date: Date,
     teams: [{
         type: {type: String, required: true},
@@ -39,3 +35,4 @@ var gameSchema = mongoose.Schema({
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('Game', gameSchema);
+*/
