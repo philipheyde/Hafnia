@@ -8,6 +8,7 @@ const user      = require('./models/user');
 const races     = require('./models/race');
 
 const queryHelper = require('./helpers/queryhelper');
+const gameDataHelper = require('./helpers/game-data-helper');
 
 module.exports = function(app, passport) {
 
@@ -97,7 +98,33 @@ module.exports = function(app, passport) {
   
   // process the signup form
   app.post('/enter-result', isLoggedIn, function(req, res) {
-    console.log('req', req.body);
+    gameDataHelper.storeGameData(req.body, function(success, gameId) {
+      console.log('game data saved', success);
+      if (success) {
+        /*var query = teams.find({ user: { $nin: req.user._id } });
+        query.exec(function (err, teams) {*/
+          res.render('game.ejs'/*, {
+            success: success, 
+            gameId: gameId,
+            user: req.user,
+            teams:  teams
+          });
+        }*/);
+        return;
+      }
+
+      // If game data was not successfully saved
+      var query = teams.find({ user: { $nin: req.user._id } });
+      query.exec(function (err, teams) {
+        res.render('game.ejs', {
+          success: success, 
+          gameId: gameId,
+          user: req.user,
+          teams:  teams
+        });
+      });
+
+    });
   });
 
   // =====================================
