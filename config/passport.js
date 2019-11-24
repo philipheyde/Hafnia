@@ -1,3 +1,5 @@
+const teams     = require('../app/models/team');
+
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
 
@@ -22,7 +24,7 @@ module.exports = function(passport) {
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
             done(err, user);
-        });
+        }).populate({path: 'teams' });
     });
 
     // =========================================================================
@@ -107,10 +109,11 @@ module.exports = function(passport) {
             // if the user is found but the password is wrong
             if (!user.validPassword(password))
                 return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-
+            
+            //console.log('user logged in', user);
             // all is well, return successful user
             return done(null, user);
-        });
+        }).populate({path: 'teams' });
 
     }));
 

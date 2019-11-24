@@ -8,18 +8,8 @@
     <header>    
         <% include ../partials/header %>
     </header>
-    <div class="container">
 
-        <% if (!user) { %>
-        <div class="jumbotron text-center">
-            <h1><span class="fa fa-lock"></span> Node Authentication</h1>
-
-            <p>Login or Register with:</p>
-
-            <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
-            <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Local Signup</a>
-        </div>
-        <% } else { %>
+        <% if (user) { %>
             <div class="row">
                 <!-- LOCAL INFORMATION -->
                 <div class="col-sm-6">
@@ -44,8 +34,6 @@
                     </ol>
             <% }) %>
         </ul>
-
-    </div>
     
     <footer>
         <% include ../partials/footer %>

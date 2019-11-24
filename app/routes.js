@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 const divisions = require('./models/division');
 const games     = require('./models/game');
 const teams     = require('./models/team');
@@ -17,28 +20,15 @@ module.exports = function(app, passport) {
       var gameQuery = games.aggregate(queryHelper.allGames());
       
       gameQuery.exec(function (err, gameData) {
-        console.log('gameData', gameData);
-        games.aggregate(gameData.forEach(function (doc){
-          teams.findOne({_id: doc.team}).exec(function(err, data){
-            console.log('team name', data.name);
-            doc["teamname"] = data.name;
-          });
-        }));
+        //console.log('gameData', gameData);
         
         res.render('index.ejs', {
-          user : req.user, // get the user out of session and pass to template
-          divisions : divisions,
-          games: gameData
+          user:       req.user,
+          divisions:  divisions,
+          games:      gameData
         });
       });
     });
-
-    /*
-    res.render('index.ejs', {
-      user : req.user, // get the user out of session and pass to template
-      divisions : divisions
-    }); // load the index.ejs file
-    */
   });
 
   // =====================================
@@ -48,7 +38,10 @@ module.exports = function(app, passport) {
   app.get('/login', function(req, res) {
 
       // render the page and pass in any flash data if it exists
-      res.render('login.ejs', { message: req.flash('loginMessage') }); 
+      res.render('login.ejs', {
+        message:    req.flash('loginMessage'),
+        user:       req.user
+      }); 
   });
 
   // process the login form
@@ -56,7 +49,8 @@ module.exports = function(app, passport) {
         successRedirect : '/profile', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
-    }));
+  }));
+
   // =====================================
   // SIGNUP ==============================
   // =====================================
@@ -77,18 +71,33 @@ module.exports = function(app, passport) {
   // =====================================
   // PROFILE SECTION =====================
   // =====================================
-  // we will want this protected so you have to be logged in to visit
-  // we will use route middleware to verify this (the isLoggedIn function)
   app.get('/profile', isLoggedIn, function(req, res) {
     var query = user.findOne({_id: req.user._id}).populate({path: 'teams', populate: {path: 'race', select: 'name'}})
     query.exec(function (err, data) {
-      //console.log("user", data)
-      //console.log("team data", data.teams)
       res.render('profile.ejs', {
           user : req.user, // get the user out of session and pass to template
           teamdata: data.teams
       });
     });
+  });
+
+  // =====================================
+  // ENTER MATCH PAGE ====================
+  // =====================================
+  app.get('/enter-result', isLoggedIn, function(req, res) {
+    var query = teams.find({ user: { $nin: req.user._id } });
+    query.exec(function (err, teams) {
+      res.render('enter-result.ejs', {
+          user:   req.user,
+          teams:  teams
+      });
+    });
+  });
+
+  
+  // process the signup form
+  app.post('/enter-result', isLoggedIn, function(req, res) {
+    console.log('req', req.body);
   });
 
   // =====================================

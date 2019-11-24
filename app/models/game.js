@@ -32,11 +32,6 @@ var gameSchema = mongoose.Schema({
         required: true,
         default: 0
     },
-    spectators: {
-        type: Number,
-        required: true,
-        default: 0
-    },
     played: Boolean
 });
 
