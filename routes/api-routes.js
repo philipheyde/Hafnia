@@ -3,14 +3,14 @@ var db = require("../models");
 var passport = require("../config/passport");
 
 var isAuthenticated = require("../config/middleware/isAuthenticated");
-var isNotAuthenticated = require("../config/middleware/isNotAuthenticated");
+//var isNotAuthenticated = require("../config/middleware/isNotAuthenticated");
 
 module.exports = function(app) {
   // =====================================
   // LOGIN ===============================
   // =====================================
     // process the login form
-    app.post('/login', isNotAuthenticated, passport.authenticate('login', {
+    app.post("/login", passport.authenticate("local-login", {
         successRedirect : '/profile', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages

@@ -40,13 +40,19 @@ module.exports = function(app) {
   // PROFILE SECTION =====================
   // =====================================
   app.get('/profile', isAuthenticated, function(req, res) {
-    var query = user.findOne({_id: req.user._id}).populate({path: 'teams', populate: {path: 'race', select: 'name'}})
+    console.log('req.user', req.user);
+    res.render('profile.ejs', {
+      user : req.user // get the user out of session and pass to template
+      //teamdata: data.teams
+  });
+/*var query = user.findOne({_id: req.user._id}).populate({path: 'teams', populate: {path: 'race', select: 'name'}})
     query.exec(function (err, data) {
       res.render('profile.ejs', {
           user : req.user, // get the user out of session and pass to template
           teamdata: data.teams
       });
     });
+    */
   });
 
   // =====================================
