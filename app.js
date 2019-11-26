@@ -16,7 +16,7 @@ const flash       = require('connect-flash');
 
 //var createError = require('http-errors');
 //var cookieParser = require('cookie-parser');
-//var morgan = require('morgan');
+const logger = require('morgan');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views/pages'));
@@ -25,6 +25,8 @@ app.set('views', path.join(__dirname, 'views/pages'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(logger('dev'));
 
 // We need to use sessions to keep track of our user's login status
 app.use(session({ secret: "ilovescotchscotchyscotchscotch", resave: true, saveUninitialized: true }));

@@ -7,6 +7,10 @@ module.exports = function(sequelize, DataTypes) {
       unique: true,
       primaryKey: true
     },
+    season_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -17,4 +21,3 @@ module.exports = function(sequelize, DataTypes) {
 
   return Division;
 };
-

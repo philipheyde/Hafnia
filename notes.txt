@@ -6,3 +6,7 @@ https://medium.com/technoetics/handling-user-login-and-registration-using-nodejs
 
 
 Database diagram: https://dbdiagram.io/d/5ddd972fedf08a25543e6872
+
+
+Getting data and building controllers with Sequelize:
+https://medium.com/@prajramesh93/getting-started-with-node-express-and-mysql-using-sequelize-ed1225afc3e0
