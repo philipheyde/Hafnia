@@ -2,3 +2,7 @@ More on Password and MySQL:
 https://dev.to/gm456742/building-a-nodejs-web-app-using-passportjs-for-authentication-3ge2
 
 https://medium.com/technoetics/handling-user-login-and-registration-using-nodejs-and-mysql-81b146e37419
+
+
+
+Database diagram: https://dbdiagram.io/d/5ddd972fedf08a25543e6872
