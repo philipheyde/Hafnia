@@ -5,7 +5,7 @@ var path = require("path");
 var isAuthenticated = require("../config/middleware/isAuthenticated");
 var isNotAuthenticated = require("../config/middleware/isNotAuthenticated");
 
-const userController = require('../app/controllers').user;
+const userController = require('../controllers').user;
 
 module.exports = function(app) {
 //

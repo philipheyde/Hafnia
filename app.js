@@ -4,11 +4,11 @@ const bodyParser  = require('body-parser');
 const session     = require('express-session');
 
 // Requiring passport as we've configured it
-const passport    = require("./config/passport");
+const passport    = require("./app/config/passport");
 
 // Setting up port and requiring models for syncing
 const PORT        = process.env.PORT || 8080;
-const db          = require("./models");
+const db          = require("./app/models");
 
 const app         = express();
 const path        = require('path');
@@ -38,8 +38,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.set('view engine', 'ejs');
 
 // Requiring our routes
-require("./routes/html-routes.js")(app);
-require("./routes/api-routes.js")(app);
+require("./app/routes/html-routes.js")(app);
+require("./app/routes/api-routes.js")(app);
 
 //app.use(morgan('dev')); // log every request to the console
 //app.use(cookieParser()); // read cookies (needed for auth)
